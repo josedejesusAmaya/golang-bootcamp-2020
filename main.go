@@ -21,7 +21,8 @@ type Config struct {
 func main() {
 	var cfg Config
 	readConfig(&cfg)
-	http.HandleFunc("/api/read", router.HandleRequest) // to do: add controler
+	// define routes
+	http.HandleFunc("/api/read", router.HandleRequestRead) // to do: add controler
 	fmt.Println("Service is running")
 	err := http.ListenAndServe(cfg.Server.Port, nil)
 	if err != nil {

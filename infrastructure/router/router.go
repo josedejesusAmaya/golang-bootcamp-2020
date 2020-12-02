@@ -2,7 +2,6 @@ package router
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -11,18 +10,14 @@ import (
 
 const badRequest = 405
 
-// HandleRequest is the handler of my routes
-func HandleRequest(w http.ResponseWriter, r *http.Request) {
-	log.Println("Request received:", r.Method)
-
-	switch r.Method {
-	case http.MethodGet:
+// HandleRequestRead is the handler of my routes
+func HandleRequestRead(w http.ResponseWriter, r *http.Request) {
+	log.Println("Request Read received:", r.Method)
+	if r.Method == "GET" {
 		readCSV(w, r)
-		break
-	default:
+	} else {
 		w.WriteHeader(badRequest)
 		w.Write([]byte("Method not allowed"))
-		break
 	}
 }
 
@@ -46,9 +41,9 @@ func readCSV(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalf("Error reading line %v", err)
 		}
-
+		// fmt.Println(record[0]) Name
+		// fmt.Println(record[13]) FlightHr
 		data = append(data, record)
 	}
 
-	fmt.Println(data)
 }
