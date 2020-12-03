@@ -16,15 +16,28 @@ const badRequest = 405
 // Astronaut object to read the CSV
 type Astronaut = model.Astronaut
 
-// HandleRequestRead is the handler of my routes
+// HandleRequestAPI to consume external API and write the CSV
+func HandleRequestAPI(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		writeCSV(w, r)
+	} else {
+		w.WriteHeader(badRequest)
+		w.Write([]byte("Method not allowed"))
+	}
+}
+
+// HandleRequestRead to read my CSV
 func HandleRequestRead(w http.ResponseWriter, r *http.Request) {
-	log.Println("Request Read received:", r.Method)
 	if r.Method == "GET" {
 		readCSV(w, r)
 	} else {
 		w.WriteHeader(badRequest)
 		w.Write([]byte("Method not allowed"))
 	}
+}
+
+func writeCSV(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func readCSV(w http.ResponseWriter, r *http.Request) {

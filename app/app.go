@@ -18,13 +18,16 @@ type Config struct {
 	} `yaml:"server"`
 }
 
+// Start is the main function
 func Start() {
 	var cfg Config
 	readConfig(&cfg)
+	mux := http.NewServeMux()
 	// define routes
-	http.HandleFunc("/api/read", handler.HandleRequestRead) // to do: add controller
+	mux.HandleFunc("/api/astronauts", handler.HandleRequestAPI)
+	mux.HandleFunc("/api/read", handler.HandleRequestRead)
 	fmt.Println("Service is running")
-	err := http.ListenAndServe(cfg.Server.Port, nil)
+	err := http.ListenAndServe(cfg.Server.Port, mux)
 	if err != nil {
 		log.Fatalf("Failed to listen on port 8000: %v", err)
 		return
