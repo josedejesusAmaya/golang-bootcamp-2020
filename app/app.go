@@ -26,9 +26,9 @@ func Start() {
 	readConfig(&cfg)
 	mux := http.NewServeMux()
 	// wiring
-	ah := handler.AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryStub())}
-	mux.HandleFunc("/api/astronauts", ah.HandleRequestAPI)
-	mux.HandleFunc("/api/read", handler.HandleRequestRead)
+	ahandler := handler.AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryDB())}
+	mux.HandleFunc("/api/astronauts", handler.HandleRequestAPI)
+	mux.HandleFunc("/api/read", ahandler.HandleRequestRead)
 	fmt.Println("Service is running")
 	err := http.ListenAndServe(cfg.Server.Port, mux)
 	if err != nil {
