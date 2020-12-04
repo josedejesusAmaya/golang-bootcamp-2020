@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/app/handler"
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/domain"
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/service"
 	"gopkg.in/yaml.v2"
 )
 
@@ -23,8 +25,9 @@ func Start() {
 	var cfg Config
 	readConfig(&cfg)
 	mux := http.NewServeMux()
-	// define routes
-	mux.HandleFunc("/api/astronauts", handler.HandleRequestAPI)
+	// wiring
+	ah := handler.AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryStub())}
+	mux.HandleFunc("/api/astronauts", ah.HandleRequestAPI)
 	mux.HandleFunc("/api/read", handler.HandleRequestRead)
 	fmt.Println("Service is running")
 	err := http.ListenAndServe(cfg.Server.Port, mux)
