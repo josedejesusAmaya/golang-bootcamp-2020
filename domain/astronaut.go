@@ -6,7 +6,7 @@ type Astronaut struct {
 	FlightHr int    `json:"flightHr"`
 }
 
-// AstronautRepository is a port to the server side (Repository pattern)
+// AstronautRepository is a port from the DB
 type AstronautRepository interface {
 	FindAll() ([]Astronaut, error)
 }

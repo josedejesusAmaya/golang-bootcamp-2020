@@ -3,40 +3,65 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/domain"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/service"
 )
 
-const badRequest = 405
-
-// Astronaut object to read the CSV
-type Astronaut = domain.Astronaut
-
 // AstronautHandler is
 type AstronautHandler struct {
 	Service service.AstronautService
 }
 
-// HandleRequestAPI to consume external API and write the CSV
-func HandleRequestAPI(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		fmt.Println("HandleRequestAPI")
+// APIHandler is
+type APIHandler struct {
+	Service service.APIService
+}
+
+// requestAPI to consume external API and write the CSV
+func requestAPI(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HandleRequestAPI")
+	// wiring
+	api := APIHandler{Service: service.NewAPIService(domain.NewAstronautRepositoryAPI())}
+	message, err := api.Service.WriteCSV()
+	if err != nil {
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
 	} else {
-		w.WriteHeader(badRequest)
-		w.Write([]byte("Method not allowed"))
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(message)
 	}
 }
 
-// HandleRequestRead to read the CSV file
-func (a *AstronautHandler) HandleRequestRead(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		astronauts, _ := a.Service.GetAllAstronauts()
+// requestDB to read the CSV file
+func requestDB(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HandleRequestDB")
+	// wiring
+	db := AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryDB())}
+	astronauts, err := db.Service.GetAllAstronauts()
+	if err != nil {
 		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(astronauts)
+		json.NewEncoder(w).Encode(err)
 	} else {
-		w.WriteHeader(badRequest)
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(astronauts)
+	}
+}
+
+// HandleRequest is
+func HandleRequest(w http.ResponseWriter, r *http.Request) {
+	log.Println("Request received:", r.Method)
+	switch r.Method {
+	case "POST":
+		requestAPI(w, r)
+	case "GET":
+		requestDB(w, r)
+	default:
+		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Method not allowed"))
 	}
 }

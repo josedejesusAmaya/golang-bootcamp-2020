@@ -13,11 +13,12 @@ type AstronautRepositoryDB struct {
 	astronauts []Astronaut
 }
 
-// FindAll is
+// FindAll is my function to read the CSV file
 func (a AstronautRepositoryDB) FindAll() ([]Astronaut, error) {
 	file, err := os.Open("infrastructure/astronauts.csv")
 	if err != nil {
 		log.Fatalf("Error opening the file: %v", err)
+		return nil, err
 	}
 
 	reader := csv.NewReader(file)
@@ -32,11 +33,13 @@ func (a AstronautRepositoryDB) FindAll() ([]Astronaut, error) {
 
 		if err != nil {
 			log.Fatalf("Error reading line %v", err)
+			return nil, err
 		}
 
 		hours, err := strconv.Atoi(record[13])
 		if err != nil {
 			log.Fatalf("Error %v", err)
+			return nil, err
 		}
 		createAstronaut(&a.astronauts, record[0], hours)
 	}

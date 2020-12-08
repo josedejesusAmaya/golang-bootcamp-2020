@@ -7,8 +7,6 @@ import (
 	"os"
 
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/app/handler"
-	"github.com/josedejesusAmaya/golang-bootcamp-2020/domain"
-	"github.com/josedejesusAmaya/golang-bootcamp-2020/service"
 	"gopkg.in/yaml.v2"
 )
 
@@ -24,13 +22,9 @@ type Config struct {
 func Start() {
 	var cfg Config
 	readConfig(&cfg)
-	mux := http.NewServeMux()
-	// wiring
-	ahandler := handler.AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryDB())}
-	mux.HandleFunc("/api/astronauts", handler.HandleRequestAPI)
-	mux.HandleFunc("/api/read", ahandler.HandleRequestRead)
+	http.HandleFunc("/api/astronauts", handler.HandleRequest)
 	fmt.Println("Service is running")
-	err := http.ListenAndServe(cfg.Server.Port, mux)
+	err := http.ListenAndServe(cfg.Server.Port, nil)
 	if err != nil {
 		log.Fatalf("Failed to listen on port 8000: %v", err)
 		return

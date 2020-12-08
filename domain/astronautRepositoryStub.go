@@ -5,7 +5,7 @@ type AstronautRepositoryStub struct {
 	astronauts []Astronaut
 }
 
-// FindAll is a function for testing to find all astronauts
+// FindAll is a function for testing
 func (a AstronautRepositoryStub) FindAll() ([]Astronaut, error) {
 	return a.astronauts, nil
 }

@@ -1,0 +1,5 @@
+POST http://localhost:8000/api/astronauts
+
+###
+
+GET http://localhost:8000/api/astronauts
