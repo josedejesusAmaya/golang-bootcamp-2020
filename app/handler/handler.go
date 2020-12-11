@@ -2,10 +2,9 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/domain"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/service"
 )
@@ -22,7 +21,6 @@ type APIHandler struct {
 
 // requestAPI to consume external API and write the CSV
 func requestAPI(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HandleRequestAPI")
 	// wiring
 	api := APIHandler{Service: service.NewAPIService(domain.NewAstronautRepositoryAPI())}
 	message, err := api.Service.WriteCSV()
@@ -38,7 +36,6 @@ func requestAPI(w http.ResponseWriter, r *http.Request) {
 
 // requestDB to read the CSV file
 func requestDB(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HandleRequestDB")
 	// wiring
 	db := AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryDB())}
 	astronauts, err := db.Service.GetAllAstronauts()
@@ -52,9 +49,8 @@ func requestDB(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// HandleRequest to handle the HTTP request
+// HandleRequest to handle the HTTP request to GET and read the astronauts
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
-	log.Println("Request received:", r.Method)
 	switch r.Method {
 	case "POST":
 		requestAPI(w, r)
@@ -64,4 +60,26 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Method not allowed"))
 	}
+}
+
+// OrderedHandleRequest to get an ordered list of astronauts
+func OrderedHandleRequest(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if vars["order"] == "asc" {
+		ascAstronautsList()
+	}
+
+	if vars["order"] == "desc" {
+		descAstronautsList()
+	}
+}
+
+// ascAstronautsList returns asc list by the spaceFlightHr field
+func ascAstronautsList() {
+
+}
+
+// descAstronautsList returns desc list by the spaceFlightHr field
+func descAstronautsList() {
+
 }

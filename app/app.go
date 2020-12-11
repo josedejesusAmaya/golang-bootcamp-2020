@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/app/handler"
 	"gopkg.in/yaml.v2"
 )
@@ -18,13 +19,15 @@ type Config struct {
 	} `yaml:"server"`
 }
 
-// Start is the main function
+// Start is the main function of the app
 func Start() {
 	var cfg Config
+	router := mux.NewRouter()
 	readConfig(&cfg)
-	http.HandleFunc("/api/astronauts", handler.HandleRequest)
+	router.HandleFunc("/api/astronauts", handler.HandleRequest)
+	router.HandleFunc("/api/astronauts/{order:[a-z]+}", handler.OrderedHandleRequest)
 	fmt.Println("Service is running")
-	err := http.ListenAndServe(cfg.Server.Port, nil)
+	err := http.ListenAndServe(cfg.Server.Port, router)
 	if err != nil {
 		log.Fatalf("Failed to listen on port 8000: %v", err)
 		return
