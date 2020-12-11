@@ -10,12 +10,12 @@ import (
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/service"
 )
 
-// AstronautHandler is
+// AstronautHandler is a type to create astronaut services
 type AstronautHandler struct {
 	Service service.AstronautService
 }
 
-// APIHandler is
+// APIHandler is a type to create api services
 type APIHandler struct {
 	Service service.APIService
 }
@@ -52,7 +52,7 @@ func requestDB(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// HandleRequest is
+// HandleRequest to handle the HTTP request
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	log.Println("Request received:", r.Method)
 	switch r.Method {

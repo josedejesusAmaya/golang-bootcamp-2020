@@ -1,6 +1,6 @@
 package domain
 
-// AstronautRepositoryStub is a truct for the data testing
+// AstronautRepositoryStub is the type of the state for the data testing
 type AstronautRepositoryStub struct {
 	astronauts []Astronaut
 }

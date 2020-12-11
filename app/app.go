@@ -31,6 +31,7 @@ func Start() {
 	}
 }
 
+// readConfig to decode yml file
 func readConfig(cfg *Config) {
 	f, err := os.Open("config.yml")
 	if err != nil {

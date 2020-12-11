@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// AstronautRepositoryDB is
+// AstronautRepositoryDB is the type of the state
 type AstronautRepositoryDB struct {
 	astronauts []Astronaut
 }
