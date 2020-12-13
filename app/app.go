@@ -8,6 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/app/handler"
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/domain"
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/service"
 	"gopkg.in/yaml.v2"
 )
 
@@ -19,13 +21,17 @@ type Config struct {
 	} `yaml:"server"`
 }
 
+var wiring handler.Wiring
+
 // Start is the main function of the app
 func Start() {
 	var cfg Config
 	router := mux.NewRouter()
 	readConfig(&cfg)
-	router.HandleFunc("/api/astronauts", handler.HandleRequest)
-	router.HandleFunc("/api/astronauts/{order:[a-z]+}", handler.OrderedHandleRequest)
+	wiring.DB = handler.AstronautHandler{Service: service.NewAstronautService(domain.NewAstronautRepositoryDB())}
+	wiring.API = handler.APIHandler{Service: service.NewAPIService(domain.NewAstronautRepositoryAPI())}
+	router.HandleFunc("/api/astronauts", wiring.HandleRequest)
+	router.HandleFunc("/api/astronauts/{order:[a-z]+}", wiring.OrderedHandleRequest)
 	fmt.Println("Service is running")
 	err := http.ListenAndServe(cfg.Server.Port, router)
 	if err != nil {

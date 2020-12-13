@@ -3,12 +3,12 @@ package domain
 import (
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
 )
 
 // AstronautRepositoryAPI is the type of the state
@@ -17,31 +17,27 @@ type AstronautRepositoryAPI struct {
 }
 
 // FindAll is my function to create the CSV file
-func (api AstronautRepositoryAPI) FindAll() (string, error) {
+func (api AstronautRepositoryAPI) FindAll() (string, *errs.AppError) {
 	resp, err := http.Get("https://astronautsapinodejs.herokuapp.com/astronauts")
 	if err != nil {
-		log.Fatalf("Error making HTTP request: %v", err)
-		return "", err
+		return "", errs.NewUnexpectedError("Error making HTTP request")
 	}
 	jsonDataFromFile, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("Error opening the file: %v", err)
-		return "", err
+		return "", errs.NewUnexpectedError("Error opening the file")
 	}
 	var jsonData []Response
 	err = json.Unmarshal([]byte(jsonDataFromFile), &jsonData)
 	if err != nil {
-		fmt.Println(err)
-		return "", err
+		return "", errs.NewUnexpectedError("Error trying to unmarshal JSON")
 	}
 	csvFile, err := os.Create("infrastructure/astronauts.csv")
 	if err != nil {
-		log.Fatalf("Failed creating file: %v", err)
-		return "Error ", err
+		return "", errs.NewUnexpectedError("Failed to create file")
 	}
 	defer csvFile.Close()
 	csvWriter(csvFile, jsonData)
-	return "message: CSV file was created", nil
+	return "CSV file was created", nil
 }
 
 // NewAstronautRepositoryAPI to initialize repository

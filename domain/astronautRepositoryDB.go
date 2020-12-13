@@ -3,9 +3,10 @@ package domain
 import (
 	"encoding/csv"
 	"io"
-	"log"
 	"os"
 	"strconv"
+
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
 )
 
 // AstronautRepositoryDB is the type of the state
@@ -13,12 +14,13 @@ type AstronautRepositoryDB struct {
 	astronauts []Astronaut
 }
 
-// FindAll is my function to read the CSV file
-func (a AstronautRepositoryDB) FindAll() ([]Astronaut, error) {
+var originalList []Astronaut
+
+// FindAll is my function to read the CSV file and return all astronauts
+func (a AstronautRepositoryDB) FindAll() ([]Astronaut, *errs.AppError) {
 	file, err := os.Open("infrastructure/astronauts.csv")
 	if err != nil {
-		log.Fatalf("Error opening the file: %v", err)
-		return nil, err
+		return nil, errs.NewUnexpectedError("Error opening the file")
 	}
 
 	reader := csv.NewReader(file)
@@ -32,24 +34,70 @@ func (a AstronautRepositoryDB) FindAll() ([]Astronaut, error) {
 		}
 
 		if err != nil {
-			log.Fatalf("Error reading line %v", err)
-			return nil, err
+			return nil, errs.NewUnexpectedError("Error reading line")
 		}
 
 		hours, err := strconv.Atoi(record[13])
 		if err != nil {
-			log.Fatalf("Error %v", err)
-			return nil, err
+			return nil, errs.NewUnexpectedError("Error casting int to string")
 		}
-		createAstronaut(&a.astronauts, record[0], hours)
+		createAstronaut(&originalList, record[0], hours)
 	}
+	a.astronauts = originalList
+	return a.astronauts, nil
+}
+
+// FindAsc to return all asc ordered astronauts
+func (a AstronautRepositoryDB) FindAsc() ([]Astronaut, *errs.AppError) {
+	auxList := originalList
+	count := 0
+	change := true
+	for change {
+		change = false
+		for i := 1; i < (len(auxList) - count); i++ {
+			if auxList[i-1].FlightHr > auxList[i].FlightHr {
+				change = true
+				orderList(&auxList, i)
+			}
+		}
+		count++
+	}
+	a.astronauts = auxList
+	return a.astronauts, nil
+}
+
+// orderList swap the FlighHr values to sort the astronauts list
+func orderList(a *[]Astronaut, right int) {
+	left := right - 1
+	newList := *a
+	aux := newList[left].FlightHr
+	newList[left].FlightHr = newList[right].FlightHr
+	newList[right].FlightHr = aux
+}
+
+// FindDesc is to return all desc ordered astronauts
+func (a AstronautRepositoryDB) FindDesc() ([]Astronaut, *errs.AppError) {
+	auxList := originalList
+	count := 0
+	change := true
+	for change {
+		change = false
+		for i := 1; i < (len(auxList) - count); i++ {
+			if auxList[i-1].FlightHr < auxList[i].FlightHr {
+				change = true
+				orderList(&auxList, i)
+			}
+		}
+		count++
+	}
+	a.astronauts = auxList
 	return a.astronauts, nil
 }
 
 // NewAstronautRepositoryDB is the implementation of the helper
 func NewAstronautRepositoryDB() AstronautRepositoryDB {
-	astronauts := make([]Astronaut, 0)
-	return AstronautRepositoryDB{astronauts: astronauts}
+	originalList := make([]Astronaut, 0)
+	return AstronautRepositoryDB{astronauts: originalList}
 }
 
 // Create my slice of astronauts

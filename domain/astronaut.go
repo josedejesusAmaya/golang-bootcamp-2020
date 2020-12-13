@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
+
 // Astronaut is the main structure for collecting data from the CSV
 type Astronaut struct {
 	Name     string `json:"name"`
@@ -8,5 +10,7 @@ type Astronaut struct {
 
 // AstronautRepository is a port from the DB
 type AstronautRepository interface {
-	FindAll() ([]Astronaut, error)
+	FindAll() ([]Astronaut, *errs.AppError)
+	FindAsc() ([]Astronaut, *errs.AppError)
+	FindDesc() ([]Astronaut, *errs.AppError)
 }

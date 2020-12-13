@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
+
 // API is the main structure of the response from creating the CSV file
 type API struct {
 	Message int `json:"message"`
@@ -7,10 +9,10 @@ type API struct {
 
 // APIRepository is is a port from the API
 type APIRepository interface {
-	FindAll() (string, error)
+	FindAll() (string, *errs.AppError)
 }
 
-// Response is the type  
+// Response is the type
 type Response struct {
 	Name               string  `json:"name"`
 	Year               int     `json:"year"`
