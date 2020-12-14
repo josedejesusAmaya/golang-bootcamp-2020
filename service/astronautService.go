@@ -8,9 +8,9 @@ import (
 
 // AstronautService is the port for the User adapter
 type AstronautService interface {
-	GetAllAstronauts() ([]domain.Astronaut, *errs.AppError)
-	GetAscAstronauts() ([]domain.Astronaut, *errs.AppError)
-	GetDescAstronauts() ([]domain.Astronaut, *errs.AppError)
+	GetAllAstronauts() ([]domain.Astronaut, *errs.Error)
+	GetAscAstronauts() ([]domain.Astronaut, *errs.Error)
+	GetDescAstronauts() ([]domain.Astronaut, *errs.Error)
 }
 
 // DefaultAstronautService defines the type of data for the Data interface
@@ -19,17 +19,17 @@ type DefaultAstronautService struct {
 }
 
 // GetAllAstronauts is the implementation to store the data
-func (d DefaultAstronautService) GetAllAstronauts() ([]domain.Astronaut, *errs.AppError) {
+func (d DefaultAstronautService) GetAllAstronauts() ([]domain.Astronaut, *errs.Error) {
 	return d.repository.FindAll()
 }
 
 // GetAscAstronauts is the implementation to store the asc data
-func (d DefaultAstronautService) GetAscAstronauts() ([]domain.Astronaut, *errs.AppError) {
+func (d DefaultAstronautService) GetAscAstronauts() ([]domain.Astronaut, *errs.Error) {
 	return d.repository.FindAsc()
 }
 
 // GetDescAstronauts is the implementation to store the desc data
-func (d DefaultAstronautService) GetDescAstronauts() ([]domain.Astronaut, *errs.AppError) {
+func (d DefaultAstronautService) GetDescAstronauts() ([]domain.Astronaut, *errs.Error) {
 	return d.repository.FindDesc()
 }
 

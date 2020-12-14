@@ -17,7 +17,7 @@ type AstronautRepositoryAPI struct {
 }
 
 // FindAll is my function to create the CSV file
-func (api AstronautRepositoryAPI) FindAll() (string, *errs.AppError) {
+func (api AstronautRepositoryAPI) FindAll() (string, *errs.Error) {
 	resp, err := http.Get("https://astronautsapinodejs.herokuapp.com/astronauts")
 	if err != nil {
 		return "", errs.NewUnexpectedError("Error making HTTP request")

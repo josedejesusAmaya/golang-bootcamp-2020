@@ -1,12 +1,14 @@
 package domain
 
+import "github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
+
 // AstronautRepositoryStub is the type of the state for the data testing
 type AstronautRepositoryStub struct {
 	astronauts []Astronaut
 }
 
 // FindAll is a function for testing
-func (a AstronautRepositoryStub) FindAll() ([]Astronaut, error) {
+func (a AstronautRepositoryStub) FindAll() ([]Astronaut, *errs.Error) {
 	return a.astronauts, nil
 }
 

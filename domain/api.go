@@ -9,7 +9,7 @@ type API struct {
 
 // APIRepository is is a port from the API
 type APIRepository interface {
-	FindAll() (string, *errs.AppError)
+	FindAll() (string, *errs.Error)
 }
 
 // Response is the type

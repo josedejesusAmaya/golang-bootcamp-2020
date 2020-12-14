@@ -2,30 +2,30 @@ package errs
 
 import "net/http"
 
-// AppError is
-type AppError struct {
+// Error is
+type Error struct {
 	Code    int    `json:",omitempty"`
 	Message string `json:"message"`
 }
 
 // AsMessage is
-func (e AppError) AsMessage() *AppError {
-	return &AppError{
+func (e Error) AsMessage() *Error {
+	return &Error{
 		Message: e.Message,
 	}
 }
 
 // NewNotFoundError is
-func NewNotFoundError(message string) *AppError {
-	return &AppError{
+func NewNotFoundError(message string) *Error {
+	return &Error{
 		Message: message,
 		Code:    http.StatusNotFound,
 	}
 }
 
 // NewUnexpectedError is
-func NewUnexpectedError(message string) *AppError {
-	return &AppError{
+func NewUnexpectedError(message string) *Error {
+	return &Error{
 		Message: message,
 		Code:    http.StatusInternalServerError,
 	}

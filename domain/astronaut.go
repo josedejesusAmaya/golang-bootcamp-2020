@@ -10,7 +10,7 @@ type Astronaut struct {
 
 // AstronautRepository is a port from the DB
 type AstronautRepository interface {
-	FindAll() ([]Astronaut, *errs.AppError)
-	FindAsc() ([]Astronaut, *errs.AppError)
-	FindDesc() ([]Astronaut, *errs.AppError)
+	FindAll() ([]Astronaut, *errs.Error)
+	FindAsc() ([]Astronaut, *errs.Error)
+	FindDesc() ([]Astronaut, *errs.Error)
 }

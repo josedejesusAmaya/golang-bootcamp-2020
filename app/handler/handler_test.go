@@ -9,11 +9,46 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/domain"
+	"github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
 	"github.com/josedejesusAmaya/golang-bootcamp-2020/mocks/service"
 )
 
-func Test_requestAPI(t *testing.T) {
+func Test_requestAPI_with_status_code_200(t *testing.T) {
+	var wiring Wiring
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockService := service.NewMockAPIService(ctrl)
+	mockService.EXPECT().WriteCSV().Return("CSV file was created", nil)
+	wiring.API = APIHandler{Service: mockService}
+	router := mux.NewRouter()
+	router.HandleFunc("/api/astronauts", wiring.HandleRequest)
+	request, _ := http.NewRequest(http.MethodPost, "/api/astronauts", nil)
 
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, request)
+
+	if recorder.Code != http.StatusOK {
+		t.Error("Failed while testing requestDB with status code 200")
+	}
+}
+
+func Test_requestAPI_with_status_code_500_with_error_message(t *testing.T) {
+	var wiring Wiring
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockService := service.NewMockAPIService(ctrl)
+	mockService.EXPECT().WriteCSV().Return("", errs.NewUnexpectedError("Unexpected database error"))
+	wiring.API = APIHandler{Service: mockService}
+	router := mux.NewRouter()
+	router.HandleFunc("/api/astronauts", wiring.HandleRequest)
+	request, _ := http.NewRequest(http.MethodPost, "/api/astronauts", nil)
+
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, request)
+
+	if recorder.Code != http.StatusInternalServerError {
+		t.Error("Failed while testing requestDB with status code 500")
+	}
 }
 
 func Test_requestDB_with_status_code_200(t *testing.T) {
@@ -36,7 +71,7 @@ func Test_requestDB_with_status_code_200(t *testing.T) {
 	router.ServeHTTP(recorder, request)
 
 	if recorder.Code != http.StatusOK {
-		t.Error("Failed while testing requestDB with status code 200 ")
+		t.Error("Failed while testing requestDB with status code 200")
 	}
 }
 
@@ -45,7 +80,7 @@ func Test_requestDB_with_status_code_500_with_error_message(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockService := service.NewMockAstronautService(ctrl)
-	mockService.EXPECT().GetAllAstronauts().Return(nil, nil)
+	mockService.EXPECT().GetAllAstronauts().Return(nil, errs.NewUnexpectedError("Unexpected database error"))
 	wiring.DB = AstronautHandler{Service: mockService}
 	router := mux.NewRouter()
 	router.HandleFunc("/api/astronauts", wiring.HandleRequest)
@@ -53,15 +88,8 @@ func Test_requestDB_with_status_code_500_with_error_message(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 	router.ServeHTTP(recorder, request)
+
 	if recorder.Code != http.StatusInternalServerError {
-		t.Error("Failed while testing requestDB with status code 500 ")
+		t.Error("Failed while testing requestDB with status code 500")
 	}
-}
-
-func Test_ascAstronautsList(t *testing.T) {
-
-}
-
-func Test_descAstronautsList(t *testing.T) {
-
 }

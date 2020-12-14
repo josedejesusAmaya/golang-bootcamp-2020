@@ -17,7 +17,7 @@ type AstronautRepositoryDB struct {
 var originalList []Astronaut
 
 // FindAll is my function to read the CSV file and return all astronauts
-func (a AstronautRepositoryDB) FindAll() ([]Astronaut, *errs.AppError) {
+func (a AstronautRepositoryDB) FindAll() ([]Astronaut, *errs.Error) {
 	file, err := os.Open("infrastructure/astronauts.csv")
 	if err != nil {
 		return nil, errs.NewUnexpectedError("Error opening the file")
@@ -48,7 +48,7 @@ func (a AstronautRepositoryDB) FindAll() ([]Astronaut, *errs.AppError) {
 }
 
 // FindAsc to return all asc ordered astronauts
-func (a AstronautRepositoryDB) FindAsc() ([]Astronaut, *errs.AppError) {
+func (a AstronautRepositoryDB) FindAsc() ([]Astronaut, *errs.Error) {
 	auxList := originalList
 	count := 0
 	change := true
@@ -76,7 +76,7 @@ func orderList(a *[]Astronaut, right int) {
 }
 
 // FindDesc is to return all desc ordered astronauts
-func (a AstronautRepositoryDB) FindDesc() ([]Astronaut, *errs.AppError) {
+func (a AstronautRepositoryDB) FindDesc() ([]Astronaut, *errs.Error) {
 	auxList := originalList
 	count := 0
 	change := true

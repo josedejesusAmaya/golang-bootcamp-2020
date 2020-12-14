@@ -8,7 +8,7 @@ import (
 
 // APIService is the port for the API adapter
 type APIService interface {
-	WriteCSV() (string, *errs.AppError)
+	WriteCSV() (string, *errs.Error)
 }
 
 // DefaultAPIService defines the type of data for the API interface
@@ -17,7 +17,7 @@ type DefaultAPIService struct {
 }
 
 // WriteCSV is the implementation to make the HTTP request, create and write the file
-func (api DefaultAPIService) WriteCSV() (string, *errs.AppError) {
+func (api DefaultAPIService) WriteCSV() (string, *errs.Error) {
 	return api.repository.FindAll()
 }
 
