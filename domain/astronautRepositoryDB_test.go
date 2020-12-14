@@ -15,7 +15,7 @@ func TestAstronautRepositoryDB_FindAll_error_opening_file(t *testing.T) {
 	}
 
 	if apiError.Code != http.StatusInternalServerError {
-		t.Error("Invalid code FindAll error while creating file")
+		t.Error("Invalid code FindAll error while opening file")
 	}
 }
 
