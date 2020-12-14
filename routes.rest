@@ -1,0 +1,11 @@
+### Make HTTP request and write the CSV file
+POST http://localhost:8000/api/astronauts
+
+### Storage the information and get the info as JSON
+GET http://localhost:8000/api/astronauts
+
+### Brings an ordered asc list of astronauts
+GET http://localhost:8000/api/astronauts/asc
+
+### Brings an ordered desc list of astronauts
+GET http://localhost:8000/api/astronauts/desc
