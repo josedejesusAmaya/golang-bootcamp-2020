@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -56,12 +57,9 @@ func Test_requestDB_with_status_code_200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockService := service.NewMockAstronautService(ctrl)
-	dummyAstronauts := []domain.Astronaut{
-		{Name: "Jane Doe", FlightHr: 30},
-		{Name: "Pepe Amaya", FlightHr: 19},
-		{Name: "John Doe", FlightHr: 10},
-	}
-	mockService.EXPECT().GetAllAstronauts().Return(dummyAstronauts, nil)
+	dummyAstronauts := domain.NewAstronautRepositoryStub()
+	fmt.Print(dummyAstronauts.Astronauts)
+	mockService.EXPECT().GetAllAstronauts().Return(dummyAstronauts.Astronauts, nil)
 	wiring.DB = AstronautHandler{Service: mockService}
 	router := mux.NewRouter()
 	router.HandleFunc("/api/astronauts", wiring.HandleRequest)

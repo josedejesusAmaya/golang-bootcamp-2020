@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -32,7 +31,7 @@ func Start() {
 	wiring.API = handler.APIHandler{Service: service.NewAPIService(domain.NewAstronautRepositoryAPI())}
 	router.HandleFunc("/api/astronauts", wiring.HandleRequest)
 	router.HandleFunc("/api/astronauts/{order:[a-z]+}", wiring.OrderedHandleRequest)
-	fmt.Println("Service is running")
+	log.Print("Service is running")
 	err := http.ListenAndServe(cfg.Server.Port, router)
 	if err != nil {
 		log.Fatalf("Failed to listen on port 8000: %v", err)

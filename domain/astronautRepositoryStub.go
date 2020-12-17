@@ -4,12 +4,12 @@ import "github.com/josedejesusAmaya/golang-bootcamp-2020/errs"
 
 // AstronautRepositoryStub is the type of the state for the data testing
 type AstronautRepositoryStub struct {
-	astronauts []Astronaut
+	Astronauts []Astronaut
 }
 
 // FindAll is a function for testing
 func (a AstronautRepositoryStub) FindAll() ([]Astronaut, *errs.Error) {
-	return a.astronauts, nil
+	return a.Astronauts, nil
 }
 
 // NewAstronautRepositoryStub is a function for double testing
@@ -19,5 +19,5 @@ func NewAstronautRepositoryStub() AstronautRepositoryStub {
 		{Name: "Pepe Amaya", FlightHr: 19},
 		{Name: "John Doe", FlightHr: 10},
 	}
-	return AstronautRepositoryStub{astronauts: astronauts}
+	return AstronautRepositoryStub{Astronauts: astronauts}
 }

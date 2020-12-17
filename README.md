@@ -1,8 +1,9 @@
 # Golang Bootcamp
 
-The API brings information about astronauts from the NASA. Storage the response to a CSV file and then read that information, sort it, and present it as JSON. In addition, I included two more requests to sort this list ascending and descending by the flight hours.
+The API handles information about American astronauts from 1959-2016. I use an external API of a service that I create with NodeJS on Heroku.This project storage the response into a CSV file and then read that information, sort it, and present it as JSON. In addition, I included two more requests to sort this list ascending and descending by the flight hours.
+Use the routes.rest file to test the endpoints.
 
-* API: https://astronautsapinodejs.herokuapp.com/astronauts
+* External API: https://astronautsapinodejs.herokuapp.com/astronauts
 * Data extracted from: https://www.kaggle.com/nasa/astronaut-yearbook?select=astronauts.csv
 
 ## Installation
@@ -11,12 +12,17 @@ Clone the project via ssh or https
 git clone https://github.com/josedejesusAmaya/golang-bootcamp-2020.git
 ```
 
+```bash
+cd golang-bootcamp-2020/
+go build
+```
+
 ### How to run
 ```bash
 go run main.go
 ```
 
-Send requests through the routes.rest file.
+The project runs a web server on `port 8080`
 
 ## Usage for Test
 ```bash

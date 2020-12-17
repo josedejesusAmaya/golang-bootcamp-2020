@@ -18,7 +18,7 @@ type APIHandler struct {
 	Service service.APIService
 }
 
-// Wiring is
+// Wiring is my struct to contains the ports of the application
 type Wiring struct {
 	DB  AstronautHandler
 	API APIHandler
@@ -47,9 +47,9 @@ func requestDB(w http.ResponseWriter, r *http.Request, myWiring Wiring) {
 // HandleRequest to handle the HTTP request to GET and read the astronauts
 func (wiring Wiring) HandleRequest(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case "POST":
+	case http.MethodPost:
 		requestAPI(w, r, wiring)
-	case "GET":
+	case http.MethodGet:
 		requestDB(w, r, wiring)
 	default:
 		w.WriteHeader(http.StatusNotFound)

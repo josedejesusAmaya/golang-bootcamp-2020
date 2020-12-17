@@ -49,21 +49,36 @@ func (a AstronautRepositoryDB) FindAll() ([]Astronaut, *errs.Error) {
 
 // FindAsc to return all asc ordered astronauts
 func (a AstronautRepositoryDB) FindAsc() ([]Astronaut, *errs.Error) {
-	auxList := originalList
+	auxList := bubbleSort(originalList, "asc")
+	a.astronauts = auxList
+	return a.astronauts, nil
+}
+
+// FindDesc is to return all desc ordered astronauts
+func (a AstronautRepositoryDB) FindDesc() ([]Astronaut, *errs.Error) {
+	auxList := bubbleSort(originalList, "desc")
+	a.astronauts = auxList
+	return a.astronauts, nil
+}
+
+func bubbleSort(auxList []Astronaut, order string) []Astronaut {
 	count := 0
 	change := true
 	for change {
 		change = false
 		for i := 1; i < (len(auxList) - count); i++ {
-			if auxList[i-1].FlightHr > auxList[i].FlightHr {
+			if auxList[i-1].FlightHr > auxList[i].FlightHr && order == "asc" {
+				change = true
+				orderList(&auxList, i)
+			}
+			if auxList[i-1].FlightHr < auxList[i].FlightHr && order == "desc" {
 				change = true
 				orderList(&auxList, i)
 			}
 		}
 		count++
 	}
-	a.astronauts = auxList
-	return a.astronauts, nil
+	return auxList
 }
 
 // orderList swap the FlighHr values to sort the astronauts list
@@ -73,25 +88,6 @@ func orderList(a *[]Astronaut, right int) {
 	aux := newList[left].FlightHr
 	newList[left].FlightHr = newList[right].FlightHr
 	newList[right].FlightHr = aux
-}
-
-// FindDesc is to return all desc ordered astronauts
-func (a AstronautRepositoryDB) FindDesc() ([]Astronaut, *errs.Error) {
-	auxList := originalList
-	count := 0
-	change := true
-	for change {
-		change = false
-		for i := 1; i < (len(auxList) - count); i++ {
-			if auxList[i-1].FlightHr < auxList[i].FlightHr {
-				change = true
-				orderList(&auxList, i)
-			}
-		}
-		count++
-	}
-	a.astronauts = auxList
-	return a.astronauts, nil
 }
 
 // NewAstronautRepositoryDB is the implementation of the helper
